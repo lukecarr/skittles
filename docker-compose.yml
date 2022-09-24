@@ -1,0 +1,17 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: timescale/timescaledb-postgis:latest-pg13
+    ports:
+      - 5432:5432
+    restart: unless-stopped
+    networks:
+      - intranet
+    environment:
+      - POSTGRES_USER=skittles
+      - POSTGRES_PASSWORD=skittles
+      - POSTGRES_DB=skittles
+
+networks:
+  intranet: {}      
