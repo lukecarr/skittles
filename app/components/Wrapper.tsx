@@ -18,7 +18,7 @@ const Wrapper: FunctionComponent<Props> = ({ heading, children, fullWidth, class
     <>
       <header className="bg-white shadow-sm">
         <div className="mx-auto max-w-7xl py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <h1 className="text-xl font-bold leading-6 text-gray-900">{heading}</h1>
+          <h1 className="text-xl font-bold leading-6 text-gray-900 py-2">{heading}</h1>
           {typeof action !== "undefined" && (
             <Link
               to={action.href}
