@@ -1,5 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 
+(BigInt.prototype as any).toJSON = function() {       
+  return this.toString()
+}
+
 let db: PrismaClient;
 
 declare global {

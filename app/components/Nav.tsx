@@ -6,8 +6,9 @@ import { TbMenu, TbX } from "react-icons/tb";
 
 const navigation = [
   { name: "League Table", href: "/league" },
+  { name: "Averages", href: "/averages" },
+  { name: "Nines League", href: "/nines" },
   { name: "Teams", href: "/teams" },
-  { name: "Matches", href: "/matches" },
   { name: "New Match", href: "/matches/new" },
 ];
 
