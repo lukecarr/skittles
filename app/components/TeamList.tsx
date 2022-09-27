@@ -26,13 +26,13 @@ const TeamList: FunctionComponent<Props> = ({ teams }) => {
                     <div className="flex items-center text-sm text-gray-500">
                       <TbUsers className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
                       <p>
-                        {team._count.players} Players
+                        {team._count.players} Player{team._count.players == 1 ? '' : 's'}
                       </p>
                     </div>
                     <div className="flex items-center text-sm text-gray-500 ml-4">
                       <TbList className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
                       <p>
-                        {team._count.homeMatches + team._count.awayMatches} Matches
+                        {team._count.homeMatches + team._count.awayMatches} Match{team._count.homeMatches + team._count.awayMatches == 1 ? '' : 'es'}
                       </p>
                     </div>
                   </div>
