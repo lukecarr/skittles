@@ -14,7 +14,7 @@ const navigation = [
 
 const Nav: FunctionComponent = () => {
   return (
-    <Disclosure as="nav" className="bg-indigo-600">
+    <Disclosure as="nav" className="bg-indigo-600 print:hidden">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

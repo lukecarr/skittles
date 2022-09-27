@@ -1362,6 +1362,49 @@ select {
   --tw-ring-offset-color: #4f46e5;
 }
 
+@media print {
+  .print\:hidden {
+    display: none;
+  }
+
+  .print\:justify-center {
+    justify-content: center;
+  }
+
+  .print\:border-none {
+    border-style: none;
+  }
+
+  .print\:bg-transparent {
+    background-color: transparent;
+  }
+
+  .print\:px-8 {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .print\:text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+
+  .print\:text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .print\:uppercase {
+    text-transform: uppercase;
+  }
+
+  .print\:shadow-none {
+    --tw-shadow: 0 0 #0000;
+    --tw-shadow-colored: 0 0 #0000;
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  }
+}
+
 @media (min-width: 640px) {
   .sm\:col-span-2 {
     grid-column: span 2 / span 2;

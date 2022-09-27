@@ -16,13 +16,13 @@ type Props = {
 const Wrapper: FunctionComponent<Props> = ({ heading, children, fullWidth, className, action }) => {
   return (
     <>
-      <header className="bg-white shadow-sm">
-        <div className="mx-auto max-w-7xl py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <h1 className="text-xl font-bold leading-6 text-gray-900 py-2">{heading}</h1>
+      <header className="bg-white shadow-sm print:shadow-none">
+        <div className="mx-auto max-w-7xl py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center print:justify-center">
+          <h1 className="text-xl font-bold leading-6 text-gray-900 py-2 print:text-2xl print:uppercase">{heading}</h1>
           {typeof action !== "undefined" && (
             <Link
               to={action.href}
-              className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              className="print:hidden inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-3 py-2 text-xs font-medium leading-4 text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
               {action.text}
             </Link>

@@ -40,7 +40,7 @@ export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
 
 const App = () => {
   return (
-    <html lang="en" className="h-full bg-gray-100">
+    <html lang="en" className="h-full bg-gray-100 print:bg-transparent">
       <head>
         <Meta />
         <Links />
