@@ -19,13 +19,13 @@ type ActionData = {
     team: string | undefined;
     firstName: string | undefined;
     lastName: string | undefined;
-    gender: string | undefined;
+    gender: "male" | "female" | undefined;
   };
   fields?: {
     team: string;
     firstName: string;
     lastName: string;
-    gender: string;
+    gender: "male" | "female";
   };
 };
 
@@ -214,9 +214,9 @@ const Page: FunctionComponent = () => {
           </div>}
         </div>
 
-        <div className="overflow-hidden bg-white shadow sm:rounded-md p-6">
+        {team.players.length > 0 ? <div className="overflow-hidden bg-white shadow sm:rounded-md p-6">
           <pre>{JSON.stringify(team.players, null, 2)}</pre>
-        </div>
+        </div> : <></>}
       </Wrapper>
     </Form>
   );

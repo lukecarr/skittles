@@ -5,7 +5,10 @@ import type { FunctionComponent } from "react";
 import { TbMenu, TbX } from "react-icons/tb";
 
 const navigation = [
+  { name: "League Table", href: "/league" },
   { name: "Teams", href: "/teams" },
+  { name: "Matches", href: "/matches" },
+  { name: "New Match", href: "/matches/new" },
 ];
 
 const Nav: FunctionComponent = () => {

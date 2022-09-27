@@ -5,9 +5,10 @@ type Props = {
   heading: string;
   children: ReactElement | ReactElement[];
   className?: string;
+  fullWidth?: boolean;
 };
 
-const Wrapper: FunctionComponent<Props> = ({ heading, children, className }) => {
+const Wrapper: FunctionComponent<Props> = ({ heading, children, fullWidth, className }) => {
   return (
     <>
       <header className="bg-white shadow-sm">
@@ -16,7 +17,7 @@ const Wrapper: FunctionComponent<Props> = ({ heading, children, className }) => 
         </div>
       </header>
       <main>
-        <div className={clsx("mx-auto max-w-7xl py-6 sm:px-6 lg:px-8", className)}>
+        <div className={clsx("py-6 sm:px-6 lg:px-8", !fullWidth && "mx-auto max-w-7xl", className)}>
           {children}
         </div>
       </main>
