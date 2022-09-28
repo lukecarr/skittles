@@ -6,45 +6,37 @@ import Wrapper from "~/components/Wrapper";
 import { db } from "~/utils/db.server";
 
 type LoaderData = {
-  player: string;
-  team: string;
-  played: string;
-  average: string;
-}[];
+  players: {
+    player: string;
+    team: string;
+    played: string;
+    average: string;
+  }[];
+  gender?: "men" | "ladies";
+};
 
-export const loader: LoaderFunction = async () => {
-  const data = await db.$queryRaw`
-    SELECT
-      "Player"."firstName" || ' ' || "Player"."lastName" AS Player,
-      "Team"."name" AS Team,
-      "Averages".Played,
-      "Averages".Average
-    FROM (
-      SELECT "Player"."id" AS "Player ID",
-        "Player"."gender" AS "Gender",
-        COUNT(DISTINCT "MatchPlayer"."matchId") AS Played,
-        SUM("Score"."score") / CAST(COUNT(DISTINCT "MatchPlayer"."matchId") AS DECIMAL) AS Average
-      FROM "Score"
-      LEFT JOIN "MatchPlayer" ON "Score"."matchPlayerId" = "MatchPlayer"."id"
-      LEFT JOIN "Player" ON "MatchPlayer"."playerId" = "Player"."id"
-      GROUP BY "Player"."id", "Player"."gender"
-      ORDER BY Average DESC, Played DESC
-    ) "Averages"
-    JOIN "Player" ON "Averages"."Player ID" = "Player"."id"
-    JOIN "Team" ON "Player"."teamId" = "Team"."id"
-    WHERE "Averages"."Gender" = FALSE
-    ORDER BY Average DESC, Played DESC
-    LIMIT 20
-  `;
+export const loader: LoaderFunction = async ({ params }) => {
+  const { gender } = params;
+  if (gender !== "men" && gender !== "ladies") return json({ players: [] });
 
-  return json(data);
+  const max = 20;
+  const data = gender === "men" ? await db.$queryRaw<LoaderData[]>`SELECT * FROM "AveragesMens" LIMIT ${max}` : await db.$queryRaw<LoaderData[]>`SELECT * FROM "AveragesLadies" LIMIT ${max}`;
+
+  return json({ players: data, gender });
 };
 
 const Page: FunctionComponent = () => {
-  const players = useLoaderData<LoaderData>();
+  const { players, gender } = useLoaderData<LoaderData>();
+  const headings = {
+    "men": "Mens' Averages",
+    "ladies": "Ladies' Averages",
+  };
 
   return (
-    <Wrapper heading="Ladies' Averages" action={{ text: "Go to mens'", href: "/averages/men" }}>
+    <Wrapper
+      heading={typeof gender === "undefined" ? "Averages" : headings[gender] ?? "Averages"}
+      action={{ text: `Go to ${gender === "men" ? "ladies" : "mens"}'`, href: `/averages/${gender === "men" ? "ladies" : "men"}` }}
+    >
       <div className="flex flex-col">
         <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">

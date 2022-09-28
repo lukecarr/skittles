@@ -15,31 +15,8 @@ type LoaderData = {
 }[];
 
 export const loader: LoaderFunction = async () => {
-  const data = await db.$queryRaw`
-    SELECT
-      "Player"."firstName" || ' ' || "Player"."lastName" AS Player,
-      "Team"."name" AS Team,
-      "Nines".Played,
-      "Nines".Nines,
-      "Nines".Spares,
-      "Nines".Total
-    FROM (
-      SELECT "Player"."id" AS "Player ID",
-        COUNT(DISTINCT "MatchPlayer"."matchId") AS Played,
-        SUM(CASE "Score"."score" WHEN 9 THEN 1 ELSE 0 END) AS Nines,
-        SUM(CASE WHEN "Score"."score" > 9 THEN 1 ELSE 0 END) AS Spares,
-        SUM(CASE WHEN "Score"."score" >= 9 THEN 1 ELSE 0 END) AS Total
-      FROM "Score"
-      LEFT JOIN "MatchPlayer" ON "Score"."matchPlayerId" = "MatchPlayer"."id"
-      LEFT JOIN "Player" ON "MatchPlayer"."playerId" = "Player"."id"
-      GROUP BY "Player"."id"
-      ORDER BY Total DESC, Spares DESC, Played
-      LIMIT 20
-    ) "Nines"
-    JOIN "Player" ON "Nines"."Player ID" = "Player"."id"
-    JOIN "Team" ON "Player"."teamId" = "Team"."id"
-    ORDER BY Total DESC, Spares DESC, Played
-  `;
+  const max = 20;
+  const data = await db.$queryRaw<LoaderData[]>`SELECT * FROM "NinesLeague" LIMIT ${max}`;
 
   return json(data);
 };
