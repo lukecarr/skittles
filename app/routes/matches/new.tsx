@@ -6,7 +6,6 @@ import { Form, useActionData, useLoaderData } from "@remix-run/react";
 import clsx from "clsx";
 import { useImmer } from "use-immer";
 import type { FunctionComponent} from "react";
-import { useEffect } from "react";
 import Wrapper from "~/components/Wrapper";
 import { db } from "~/utils/db.server";
 
@@ -71,6 +70,8 @@ export const action: ActionFunction = async ({ request }) => {
       create: JSON.parse(players).players,
     },
   }});
+
+  await db.$queryRaw`CALL "RefreshTables"()`;
 
   return redirect(`/matches`);
 };
