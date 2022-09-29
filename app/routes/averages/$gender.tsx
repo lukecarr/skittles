@@ -3,6 +3,8 @@ import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import type { FunctionComponent } from "react";
 import Wrapper from "~/components/Wrapper";
+import Table from "~/components/Table";
+import type { Props as TableProps } from "~/components/Table";
 import { db } from "~/utils/db.server";
 
 type LoaderData = {
@@ -37,79 +39,54 @@ export const loader: LoaderFunction = async ({ params }) => {
   return json({ averages, scores, gender });
 };
 
-const Page: FunctionComponent = () => {
-  const { averages, scores, gender } = useLoaderData<LoaderData>();
-  const headings = {
-    "men": "Mens' Averages",
-    "ladies": "Ladies' Averages",
-  };
-  let highestSpare = [scores[0]];
+const headings = {
+  "men": "Mens' Averages",
+  "ladies": "Ladies' Averages",
+};
+
+const getHighestScores = (scores: LoaderData["scores"]): LoaderData["scores"] => {
+  let highest = [scores[0]];
+
   for (const score of scores) {
-    if (score["Highest Score"] > highestSpare[0]["Highest Score"]) {
-      highestSpare = [score];
+    if (score["Highest Score"] > highest[0]["Highest Score"]) {
+      highest = [score];
     }
-    else if (score["Highest Score"] === highestSpare[0]["Highest Score"]) {
-      highestSpare.push(score);
+    else if (score["Highest Score"] === highest[0]["Highest Score"]) {
+      highest.push(score);
     }
   }
 
-  console.log(highestSpare);
+  return highest;
+};
 
+const Page: FunctionComponent = () => {
+  const { averages, scores, gender } = useLoaderData<LoaderData>();
+
+  const highestScores = getHighestScores(scores);
+
+  const cols: TableProps["cols"] = [
+    { id: "pos", name: "Pos", align: "center" },
+    { id: "player", name: "Player" },
+    { id: "team", name: "Team" },
+    { id: "played", name: "Played", align: "center" },
+    { id: "average", name: "Average", align: "center" },
+  ];
+
+  const data = averages.map(({ player, team, played, average }, index) => ({
+    pos: index + 1,
+    player,
+    team,
+    played: parseInt(played),
+    average: parseFloat(average).toFixed(2),
+  }));
+  
   return (
     <Wrapper
       heading={typeof gender === "undefined" ? "Averages" : headings[gender] ?? "Averages"}
       action={{ text: `Go to ${gender === "men" ? "ladies" : "mens"}'`, href: `/averages/${gender === "men" ? "ladies" : "men"}` }}
     >
-      <div className="flex flex-col">
-        <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-            <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg print:shadow-none print:border-none">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Pos
-                    </th>
-                    <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Player
-                    </th>
-                    <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Team
-                    </th>
-                    <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Played
-                    </th>
-                    <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Average
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {averages.map(({ player, team, played, average }, index) => (
-                    <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-                      <td className="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {index + 1}
-                      </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {player}
-                      </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {team}
-                      </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {parseInt(played)}
-                      </td>
-                      <td className="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {parseFloat(average).toFixed(2)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Table cols={cols} data={data} />
+      
       <dl className="mt-5 grid grid-cols-2 gap-5">
         <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
           <dt className="text-sm font-medium text-gray-500 truncate">
@@ -133,18 +110,18 @@ const Page: FunctionComponent = () => {
             </span>
           </dt>
         </div>
-        {typeof highestSpare[0] !== "undefined" && <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+        {typeof highestScores[0] !== "undefined" && <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
           <dt className="text-sm font-medium text-gray-500 truncate">
             Highest Score
           </dt>
           <dd className="mt-3 text-3xl font-bold text-gray-900 print:text-2xl print:mt-1">
-            {highestSpare[0]["Highest Score"]}
+            {highestScores[0]["Highest Score"]}
           </dd>
           <dt className="mt-1 text-base text-gray-500 sm:truncate print:text-sm">
-            {highestSpare.length === 1 ? <>
-              <span className="font-semibold">{highestSpare[0].Player}</span> for {highestSpare[0].Team} vs {highestSpare[0].Opponent} on {new Date(highestSpare[0].Timestamp).toDateString()}
+            {highestScores.length === 1 ? <>
+              <span className="font-semibold">{highestScores[0].Player}</span> for {highestScores[0].Team} vs {highestScores[0].Opponent} on {new Date(highestScores[0].Timestamp).toDateString()}
             </> : <span className="font-semibold">
-              {highestSpare.map((score) => `${score?.Player} (${score?.Team})`).sort().join(", ")}
+              {highestScores.map((score) => `${score?.Player} (${score?.Team})`).sort().join(", ")}
             </span>}
           </dt>
         </div>}
