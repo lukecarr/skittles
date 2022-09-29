@@ -1,4 +1,4 @@
-import type { ErrorBoundaryComponent, LinksFunction, MetaFunction } from "@remix-run/node";
+import type { ErrorBoundaryComponent, LinksFunction, LoaderFunction, MetaFunction } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -7,9 +7,11 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import { rootAuthLoader } from "@clerk/remix/ssr.server";
 import Nav from "./components/Nav";
 
 import styles from "./styles/app.css";
+import { ClerkApp, ClerkCatchBoundary } from "@clerk/remix";
 
 export const links: LinksFunction = () => ([
   { rel: "stylesheet", href: styles },
@@ -20,6 +22,8 @@ export const meta: MetaFunction = () => ({
   title: "Alphington Skittles",
   viewport: "width=device-width,initial-scale=1",
 });
+
+export const loader: LoaderFunction = (args) => rootAuthLoader(args, { loadUser: true });
 
 export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
   console.error(error);
@@ -38,17 +42,21 @@ export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
   );
 };
 
+export const CatchBoundary = ClerkCatchBoundary();
+
 const App = () => {
   return (
-    <html lang="en" className="h-full bg-gray-100 print:bg-transparent">
+    <html lang="en" className="min-h-screen bg-gray-100 print:bg-transparent">
       <head>
         <Meta />
         <Links />
       </head>
-      <body className="h-full">
-        <div className="min-h-full">
+      <body className="min-h-screen flex">
+        <div className="min-h-full flex-1 flex flex-col">
           <Nav />
-          <Outlet />
+          <main className="flex-1">
+            <Outlet />
+          </main>
         </div>
         
         <ScrollRestoration />
@@ -59,4 +67,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default ClerkApp(App);

@@ -1,3 +1,4 @@
+import { useClerk, useUser } from "@clerk/remix";
 import { Disclosure } from "@headlessui/react";
 import { NavLink } from "@remix-run/react";
 import clsx from "clsx";
@@ -8,11 +9,18 @@ const navigation = [
   { name: "League Table", href: "/league" },
   { name: "Averages", href: "/averages" },
   { name: "Nines League", href: "/nines" },
+];
+
+const adminNavigation = [
   { name: "Teams", href: "/teams" },
   { name: "New Match", href: "/matches/new" },
 ];
 
 const Nav: FunctionComponent = () => {
+  const { signOut } = useClerk();
+  const { isSignedIn, user } = useUser();
+  const admin = isSignedIn === true && user.publicMetadata.admin === true;
+
   return (
     <Disclosure as="nav" className="bg-indigo-600 print:hidden">
       {({ open }) => (
@@ -25,7 +33,7 @@ const Nav: FunctionComponent = () => {
                 </div>
                 <div className="hidden md:block">
                   <div className="ml-10 flex items-baseline space-x-4">
-                    {navigation.map((item) => (
+                    {[...navigation, ...(admin ? adminNavigation : [])].map((item) => (
                       <NavLink
                         key={item.name}
                         to={item.href}
@@ -39,6 +47,25 @@ const Nav: FunctionComponent = () => {
                         {item.name}
                       </NavLink>
                     ))}
+                    {isSignedIn ? <button
+                      onClick={() => {
+                        signOut();
+                        window.location.href = "/sign-in";
+                      }}
+                      className="text-white hover:bg-indigo-500 hover:bg-opacity-75 px-3 py-2 rounded-md text-sm font-semibold"
+                    >
+                      Sign out
+                    </button> : <NavLink
+                        to="/sign-in"
+                        className={({ isActive }) => clsx(
+                          isActive
+                            ? 'bg-indigo-700 text-white'
+                            : 'text-white hover:bg-indigo-500 hover:bg-opacity-75',
+                          'px-3 py-2 rounded-md text-sm font-semibold'
+                        )}
+                      >
+                        Sign in
+                      </NavLink>}
                   </div>
                 </div>
               </div>
