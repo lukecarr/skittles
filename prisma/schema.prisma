@@ -63,15 +63,13 @@ model MatchPlayer {
 
   position Int @db.SmallInt
 
-  playerId String
-  player   Player @relation(references: [id], fields: [playerId])
+  playerId String?
+  player   Player? @relation(references: [id], fields: [playerId])
 
   matchId String
   match   Match  @relation(references: [id], fields: [matchId])
 
   scores Score[]
-
-  @@unique([playerId, matchId])
 }
 
 model Score {

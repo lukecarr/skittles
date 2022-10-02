@@ -94,8 +94,8 @@ const Page: FunctionComponent = () => {
         name="players"
         required
         value={JSON.stringify({
-          players: [...homeTeamPlayers.map((player, x) => ({ playerId: player, position: x + 1, scores: { create: homeTeamScores[x].map((score, y) => ({ score, leg: y + 1, spare: score! > 9 })) }})),
-          ...awayTeamPlayers.map((player, x) => ({ playerId: player, position: x + 1, scores: { create: awayTeamScores[x].map((score, y) => ({ score, leg: y + 1, spare: score! > 9 })) }}))],
+          players: [...homeTeamPlayers.map((player, x) => ({ playerId: player === "null" ? null : player, position: x + 1, scores: { create: homeTeamScores[x].map((score, y) => ({ score, leg: y + 1, spare: score! > 9 })) }})),
+          ...awayTeamPlayers.map((player, x) => ({ playerId: player === "null" ? null : player, position: x + 1, scores: { create: awayTeamScores[x].map((score, y) => ({ score, leg: y + 1, spare: score! > 9 })) }}))],
         })}
       />
       <Wrapper heading="New Match" className="space-y-8" fullWidth>
@@ -125,6 +125,7 @@ const Page: FunctionComponent = () => {
                     "block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm",
                     actionData?.fieldErrors?.homeTeam && "text-red-500 border-red-500 ring-red-500 focus:border-red-700 focus:ring-red-700",
                   )}
+                  tabIndex={1}
                 >
                   {teams.map((team) => <option key={team.id} value={team.id}>{team.name}</option>)}
                 </select>
@@ -146,6 +147,7 @@ const Page: FunctionComponent = () => {
                     "block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm",
                     actionData?.fieldErrors?.awayTeam && "text-red-500 border-red-500 ring-red-500 focus:border-red-700 focus:ring-red-700",
                   )}
+                  tabIndex={2}
                 >
                   {teams.map((team) => <option key={team.id} value={team.id}>{team.name}</option>)}
                 </select>
@@ -167,6 +169,7 @@ const Page: FunctionComponent = () => {
                     "block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm",
                     actionData?.fieldErrors?.timestamp && "text-red-500 border-red-500 ring-red-500 focus:border-red-700 focus:ring-red-700",
                   )}
+                  tabIndex={3}
                 />
               </div>
             </div>
@@ -235,8 +238,10 @@ const Page: FunctionComponent = () => {
                                 players[x] = e.target.value != "" ? e.target.value : undefined;
                                 return players;
                               })}
+                              tabIndex={x + 4}
                             >
                               <option value="">Player {x+1}</option>
+                              <option value="null">No Player</option>
                               {homeTeam.players.filter((player) => !homeTeamPlayers.includes(player.id) || player.id === homeTeamPlayers[x]).map((player) => <option key={player.id} value={player.id}>{player.firstName} {player.lastName}</option>)}
                             </select>
                           </td>
@@ -331,8 +336,10 @@ const Page: FunctionComponent = () => {
                                 players[x] = e.target.value != "" ? e.target.value : undefined;
                                 return players;
                               })}
+                              tabIndex={x + 12}
                             >
                               <option value="">Player {x+1}</option>
+                              <option value="null">No Player</option>
                               {awayTeam.players.filter((player) => !awayTeamPlayers.includes(player.id) || player.id === awayTeamPlayers[x]).map((player) => <option key={player.id} value={player.id}>{player.firstName} {player.lastName}</option>)}
                             </select>
                           </td>
