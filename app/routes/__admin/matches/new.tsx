@@ -261,7 +261,8 @@ const Page: FunctionComponent = () => {
                                   return scores;
                                 })}
                                 pattern="[0-9]*"
-                                inputmode="numeric"
+                                inputMode="numeric"
+                                tabIndex={20 + (y * 16) + x}
                               />
                             </td>
                           ))}
@@ -364,7 +365,8 @@ const Page: FunctionComponent = () => {
                                   });
                                 }}
                                 pattern="[0-9]*"
-                                inputmode="numeric"
+                                inputMode="numeric"
+                                tabIndex={28 + (y * 16) + x}
                               />
                             </td>
                           ))}
