@@ -34,8 +34,8 @@ export const loader: LoaderFunction = async () => {
   const res: LoaderData["results"] = [];
 
   for (const game of data) {
-    const homePlayers = game.players.filter(player => player.player.teamId === game.homeTeamId);
-    const awayPlayers = game.players.filter(player => player.player.teamId === game.awayTeamId);
+    const homePlayers = game.players.filter(player => player.teamId === game.homeTeamId);
+    const awayPlayers = game.players.filter(player => player.teamId === game.awayTeamId);
     
     const result = {
       homeTeamPins: 0,

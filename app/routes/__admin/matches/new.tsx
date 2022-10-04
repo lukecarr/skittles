@@ -94,8 +94,8 @@ const Page: FunctionComponent = () => {
         name="players"
         required
         value={JSON.stringify({
-          players: [...homeTeamPlayers.map((player, x) => ({ playerId: player === "null" ? null : player, position: x + 1, scores: { create: homeTeamScores[x].map((score, y) => ({ score, leg: y + 1, spare: score! > 9 })) }})),
-          ...awayTeamPlayers.map((player, x) => ({ playerId: player === "null" ? null : player, position: x + 1, scores: { create: awayTeamScores[x].map((score, y) => ({ score, leg: y + 1, spare: score! > 9 })) }}))],
+          players: [...homeTeamPlayers.map((player, x) => ({ playerId: player === "null" ? null : player, teamId: homeTeam.id, position: x + 1, scores: { create: homeTeamScores[x].map((score, y) => ({ score, leg: y + 1, spare: score! > 9 })) }})),
+          ...awayTeamPlayers.map((player, x) => ({ playerId: player === "null" ? null : player, teamId: awayTeam.id, position: x + 1, scores: { create: awayTeamScores[x].map((score, y) => ({ score, leg: y + 1, spare: score! > 9 })) }}))],
         })}
       />
       <Wrapper heading="New Match" className="space-y-8" fullWidth>
@@ -260,6 +260,8 @@ const Page: FunctionComponent = () => {
                                   scores[x][y] = e.target.value ? parseInt(e.target.value) : undefined;
                                   return scores;
                                 })}
+                                pattern="[0-9]*"
+                                inputmode="numeric"
                               />
                             </td>
                           ))}
@@ -361,6 +363,8 @@ const Page: FunctionComponent = () => {
                                     return scores;
                                   });
                                 }}
+                                pattern="[0-9]*"
+                                inputmode="numeric"
                               />
                             </td>
                           ))}

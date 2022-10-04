@@ -17,8 +17,9 @@ model Team {
 
   players Player[]
 
-  homeMatches Match[] @relation("homeTeamMatches")
-  awayMatches Match[] @relation("awayTeamMatches")
+  homeMatches Match[]       @relation("homeTeamMatches")
+  awayMatches Match[]       @relation("awayTeamMatches")
+  MatchPlayer MatchPlayer[]
 }
 
 model Player {
@@ -65,6 +66,9 @@ model MatchPlayer {
 
   playerId String?
   player   Player? @relation(references: [id], fields: [playerId])
+
+  teamId String
+  team   Team   @relation(references: [id], fields: [teamId])
 
   matchId String
   match   Match  @relation(references: [id], fields: [matchId])
